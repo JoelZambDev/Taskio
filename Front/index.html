@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TASKIO</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+      (function () {
+        emailjs.init("68fXVMYgdL00VVsey");
+      })();
+    </script>
+  </head>
+  <body class="animated-gradient">
+    <!-- Contenedor principal con márgenes y centrado exacto -->
+    <div class="app-container">
+      <!-- 1. NAVBAR CÁPSULA -->
+      <nav class="navbar">
+        <div class="logo"><img src="Logo.webp" alt="" /></div>
+        <ul class="nav-links">
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#">Calendar</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+        <div class="nav-notif-container">
+          <button id="btnNotif" class="btn-icon" aria-label="Notificaciones">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+            <!-- Punto indicador que JS encenderá si hay tareas por vencer -->
+            <span id="badgeNotif" class="dot-notif hidden"></span>
+          </button>
+
+          <div id="panelNotif" class="panel-notificaciones hidden">
+            <div class="header-notif">
+              <span>DUE SOON</span>
+            </div>
+            <div id="listaNotif" class="lista-notif-contenido">
+              <!-- JS inyectará aquí las alertas -->
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- 2. SECCIÓN CALENDARIO DINÁMICO -->
+      <section class="seccion-calendario">
+        <!-- Selector de Mes y Año -->
+        <div class="mes-selector">
+          <div class="select-wrapper">
+            <select id="selectMes" class="mes-dropdown">
+              <!-- JavaScript inyectará las opciones de meses aquí -->
+            </select>
+            <svg
+              class="flecha-dropdown"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Slider de Días con Flechas Lateral Minimalistas -->
+        <div class="calendario-slider">
+          <button id="btnPrevDia" class="btn-flecha" aria-label="Anterior">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+
+          <div class="lista-dias" id="listaDias">
+            <!-- JavaScript inyectará dinámicamente las tarjetas de días aquí -->
+          </div>
+
+          <button id="btnNextDia" class="btn-flecha" aria-label="Siguiente">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- 3. MAIN CONTENT: LAYOUT DE DOS COLUMNAS -->
+      <div class="main-content">
+        <!-- COLUMNA IZQUIERDA: FORMULARIO NEW TASK -->
+        <section class="columna-formulario">
+          <h2 class="titulo-seccion">NEW TASK</h2>
+
+          <form id="formTarea" onsubmit="return false;">
+            <div class="grupo-input">
+              <input
+                type="text"
+                id="inputTitulo"
+                class="input-field"
+                placeholder="TITLE"
+                required
+              />
+            </div>
+
+            <div class="grupo-input">
+              <textarea
+                id="inputDescripcion"
+                class="textarea-field"
+                rows="4"
+                placeholder="DESCRIPTION"
+              ></textarea>
+            </div>
+
+            <div class="grupo-input">
+              <input
+                type="date"
+                id="inputFecha"
+                class="input-field input-date"
+              />
+            </div>
+
+            <button type="submit" id="btnAddTask" class="btn-add-task">
+              ADD TASK
+            </button>
+          </form>
+        </section>
+
+        <!-- COLUMNA DERECHA: TO-DO LIST -->
+        <section class="columna-lista">
+          <div class="header-lista">
+            <h2 class="titulo-seccion">TO-DO LIST</h2>
+
+            <!-- Filtros de Estado -->
+            <div class="filtros-estado">
+              <button class="btn-filtro active" data-filtro="all">ALL</button>
+              <button class="btn-filtro" data-filtro="pending">PENDING</button>
+              <button class="btn-filtro" data-filtro="completed">
+                COMPLETED
+              </button>
+            </div>
+          </div>
+
+          <!-- Contenedor donde JS pintará las tarjetas de tareas -->
+          <div id="contenedorTareas" class="lista-tareas">
+            <!-- Las tarjetas de tareas se inyectan dinámicamente desde main.js -->
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>

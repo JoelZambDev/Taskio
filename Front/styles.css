@@ -1,0 +1,725 @@
+/* ==========================================
+   TASKIO - ESTILOS PRINCIPALES
+   ========================================== */
+
+/* --- Variables y Paleta Neón --- */
+:root {
+  --bg-principal: #131313;
+  --bg-tarjeta: #1a1a1a;
+  --bg-input: #161616;
+  --verde-neon: #b8fe2a;
+  --texto-principal: #ffffff;
+  --texto-secundario: #666666;
+  --borde-suave: rgba(255, 255, 255, 0.05);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+body {
+  background-color: var(--bg-principal);
+  color: var(--texto-principal);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#btnNotif * {
+  pointer-events: none;
+}
+
+/* Contenedor principal con tu gradiente radial animado */
+.animated-gradient {
+  position: relative;
+  background: radial-gradient(
+    circle at center,
+    #1a1a1a 0%,
+    #131313 44%,
+    #141414 100%
+  );
+  background-size: 100% 100%;
+  animation: gradient-radial 8s ease alternate infinite;
+  overflow: hidden;
+  min-height: 100vh;
+
+  /* Crea un contexto de apilamiento propio */
+  z-index: 0;
+}
+
+/* Capa de overlay con el patrón de puntos */
+.animated-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  /* Genera la cuadrícula de puntos */
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px; /* Tamaño y separación de cada punto */
+
+  /* Asegura que no interfiera con los clics del usuario */
+  pointer-events: none;
+
+  /* Se envía detrás de todos los elementos hijos del contenedor */
+  z-index: -1;
+}
+
+/* Tu animación para el gradiente radial */
+@keyframes gradient-radial {
+  0%,
+  100% {
+    background-size: 100% 100%;
+  }
+  50% {
+    background-size: 200% 200%;
+  }
+}
+
+/* --- Contenedor Principal (Con tus márgenes exactos) --- */
+.app-container {
+  width: 100%;
+  max-width: 1100px;
+  padding: 64px 64px; /* 64px arriba y abajo */
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* ==========================================
+   1. NAVBAR CÁPSULA
+   ========================================== */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 20px 28px;
+  border-radius: 50px;
+  border: 1px solid var(--borde-suave);
+}
+
+.logo img {
+  height: 25px;
+  display: block;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 32px;
+}
+
+.nav-links a {
+  color: var(--texto-secundario);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+  color: var(--verde-neon);
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: var(--texto-principal);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================
+   NOTIFICACIONES (CAMPANA)
+   ========================================== */
+
+.nav-notif-container {
+  position: relative;
+}
+
+/* Punto brillante neón sobre la campana */
+.dot-notif {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: var(--verde-neon);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--verde-neon);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Panel Flotante Estilo Cápsula */
+.panel-notificaciones {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  width: 280px;
+  background-color: var(--bg-tarjeta);
+  border: 1px solid var(--borde-suave);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header-notif {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--texto-secundario);
+  border-bottom: 1px solid var(--borde-suave);
+  padding-bottom: 8px;
+}
+
+.lista-notif-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.item-notif {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+  border-radius: 8px;
+  border-left: 3px solid var(--verde-neon);
+}
+
+.item-notif.vencida {
+  border-left-color: #ff4444;
+}
+
+.notif-titulo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+}
+
+.notif-fecha {
+  font-size: 0.68rem;
+  color: var(--verde-neon);
+}
+
+.item-notif.vencida .notif-fecha {
+  color: #ff4444;
+}
+
+/* ==========================================
+   2. CALENDARIO DINÁMICO
+   ========================================== */
+.seccion-calendario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Selector de Mes */
+.select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mes-dropdown {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--texto-principal);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding-right: 24px;
+  outline: none;
+}
+
+.mes-dropdown option {
+  background-color: var(--bg-tarjeta);
+  color: var(--texto-principal);
+}
+
+.flecha-dropdown {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+  color: var(--texto-secundario);
+  transition: color 0.2s ease;
+}
+
+.select-wrapper:hover .flecha-dropdown {
+  color: var(--verde-neon);
+}
+
+/* Slider de Días y Flechas */
+.calendario-slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn-flecha {
+  background: transparent;
+  border: none;
+  color: var(--texto-secundario);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-flecha:hover {
+  color: var(--verde-neon);
+  transform: scale(1.15);
+}
+
+.lista-dias {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  width: 100%;
+  padding: 15px 0;
+  scrollbar-width: none;
+}
+
+.lista-dias::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tarjetas de Días */
+.card-dia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  background-color: transparent;
+  color: var(--texto-secundario);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.card-dia .nombre-dia {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.card-dia .numero-dia {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+/* Estado Activo (Día Seleccionado) */
+.card-dia.active {
+  background-color: var(--verde-neon);
+  color: #000000;
+  box-shadow: 0 0 18px rgba(184, 254, 42, 0.35);
+}
+
+.card-dia.active .nombre-dia,
+.card-dia.active .numero-dia {
+  color: #000000;
+}
+
+/* Punto Neón Pendiente */
+.dot-pendiente {
+  position: absolute;
+  top: 8px;
+  right: 6px;
+  width: 5px;
+  height: 5px;
+  background-color: var(--verde-neon);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--verde-neon);
+}
+
+.card-dia.active .dot-pendiente {
+  background-color: #000000;
+  box-shadow: none;
+}
+
+/* ==========================================
+   3. LAYOUT DE DOS COLUMNAS
+   ========================================== */
+.main-content {
+  display: flex;
+  gap: 36px;
+  width: 100%;
+}
+
+.columna-formulario {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.columna-lista {
+  flex: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.titulo-seccion {
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+/* --- Formulario (NEW TASK) --- */
+#formTarea {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-field,
+.textarea-field {
+  width: 100%;
+  background-color: var(--bg-tarjeta);
+  border: 1px solid var(--borde-suave);
+  border-radius: 12px;
+  padding: 16px;
+  color: var(--texto-principal);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input-field:focus,
+.textarea-field:focus {
+  border-color: rgba(184, 254, 42, 0.4);
+}
+
+.input-field::placeholder,
+.textarea-field::placeholder {
+  color: #444444;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.textarea-field {
+  resize: none;
+}
+
+.input-date {
+  font-weight: 700;
+  color: #444444;
+  text-transform: uppercase;
+}
+
+input[type="date"] {
+  color-scheme: dark;
+  background-color: var(--bg-tarjeta);
+  border: 1px solid var(--borde-suave);
+  border-radius: 12px;
+  padding: 16px;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+input[type="date"]:focus {
+  border-color: var(--verde-neon);
+  box-shadow: 0 0 10px rgba(184, 254, 42, 0.2);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 10px;
+  padding: 4px;
+  filter: invert(1);
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  /* Al pasar el mouse, aplicamos un tinte del color neón al ícono */
+  filter: invert(72%) sepia(85%) saturate(800%) hue-rotate(35deg)
+    brightness(105%) contrast(105%);
+  transform: scale(1.1);
+}
+
+/* Botón Neón Píldora (ADD TASK) */
+.btn-add-task {
+  width: 100%;
+  background-color: var(--verde-neon);
+  color: #000000;
+  font-weight: 900;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  padding: 16px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(184, 254, 42, 0.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  margin-top: 8px;
+}
+
+.btn-add-task:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(184, 254, 42, 0.45);
+}
+
+/* --- Encabezado de la Lista y Filtros --- */
+.header-lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filtros-estado {
+  display: flex;
+  gap: 16px;
+}
+
+.btn-filtro {
+  background: transparent;
+  border: none;
+  color: var(--texto-secundario);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: color 0.2s ease;
+}
+
+.btn-filtro.active,
+.btn-filtro:hover {
+  color: var(--verde-neon);
+}
+
+/* --- Tarjetas de Tareas (TO-DO LIST) --- */
+.lista-tareas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-tarea {
+  background-color: var(--bg-tarjeta);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--borde-suave);
+  overflow: hidden;
+}
+
+/* Barra lateral neón en tarjetas */
+.card-tarea::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--verde-neon);
+}
+
+.header-card-tarea {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titulo-tarea {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.fecha-tarea {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--verde-neon);
+}
+
+.desc-tarea {
+  font-size: 0.8rem;
+  color: #888888;
+  line-height: 1.4;
+}
+
+.footer-card-tarea {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.btn-accion-tarea {
+  background: transparent;
+  border: none;
+  font-size: 0.7rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.btn-completar {
+  color: var(--verde-neon);
+}
+
+.btn-eliminar {
+  color: #444444;
+  transition: color 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  color: #ff4444;
+}
+
+/* Contenedor relativo para posicionar elementos hijos */
+.nav-notif-container {
+  position: relative;
+}
+
+/* Punto neón verde brillante sobre la esquina de la campana */
+.dot-notif {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--verde-neon);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--verde-neon);
+}
+
+/* Clase de utilidad para ocultar elementos */
+.hidden {
+  display: none !important;
+}
+
+/* Panel flotante de notificaciones */
+.panel-notificaciones {
+  position: absolute;
+  right: 0;
+  top: 38px;
+  width: 270px;
+  background-color: var(--bg-tarjeta);
+  border: 1px solid var(--borde-suave);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header-notif {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--texto-secundario);
+  border-bottom: 1px solid var(--borde-suave);
+  padding-bottom: 8px;
+}
+
+.lista-notif-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.item-notif {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border-left: 3px solid var(--verde-neon);
+}
+
+/* Si la tarea está vencida, el indicador cambia a rojo */
+.item-notif.vencida {
+  border-left-color: #ff4444;
+}
+
+.notif-titulo {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--texto-principal);
+}
+
+.notif-fecha {
+  font-size: 0.68rem;
+  color: var(--verde-neon);
+}
+
+.item-notif.vencida .notif-fecha {
+  color: #ff4444;
+}
+
+/* Estado para notificaciones vistas */
+.item-notif.leida {
+  opacity: 0.45; /* Reduce la intensidad del elemento */
+  border-left-color: var(--texto-secundario); /* Cambia el borde a gris */
+  filter: grayscale(0.5);
+}
+
+.item-notif.leida .notif-fecha {
+  color: var(--texto-secundario);
+}
+
+/* Responsive para pantallas grandes */
+
+@media (max-width: 3000px) {
+  .app-container {
+    max-width: 60%;
+  }
+}
